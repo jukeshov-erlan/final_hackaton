@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'drf_yasg',
     'corsheaders',
+    'django_filters',
     #apps
     'movies',
 ]
@@ -150,3 +151,10 @@ SWAGGER_SETTINGS = {
 CORS_ALLOWED_ORIGINS = ['http://localhost:8000', 'http://localhost:3000', 'https://domain.com']  #SOMETHING ELSE CAN BE ADDED
 
 CORS_ALLOWED_METHODS = ['OPTIONS', 'GET', 'PUT', 'PATCH', 'POST', '*']  #SOMETHING ELSE CAN BE ADDED
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 3,
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
+}
