@@ -1,11 +1,16 @@
 from django.db import models
-from datetime import date
+from slugify import slugify
+from django.utils import timezone
 
 
 class Category(models.Model):
+    slug = models.SlugField(max_length=160, unique=True, primary_key=True, blank=True)
     name = models.CharField('Категория', max_length=150)
-    description = models.TextField('Описание')
-    url = models.SlugField(max_length=160, unique=True)
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super().save()
 
     def __str__(self) -> str:
         return self.name
@@ -16,10 +21,16 @@ class Category(models.Model):
 
 
 class Actor(models.Model):
+    slug = models.SlugField(max_length=160, unique=True, primary_key=True, blank=True)
     name = models.CharField(verbose_name='Имя', max_length=100)
     age = models.PositiveSmallIntegerField(verbose_name='Возраст', default=0)
     description = models.TextField(verbose_name='Описание')
     image = models.ImageField(verbose_name='Изображение', upload_to='actors/')
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super().save()
 
     def __str__(self) -> str:
         return self.name
@@ -29,12 +40,15 @@ class Actor(models.Model):
         verbose_name_plural = 'Актеры и режиссеры'
 
 
-    
-
 class Genre(models.Model):
+    slug = models.SlugField(max_length=160, unique=True, primary_key=True, blank=True)
     name = models.CharField(verbose_name='Жанр', max_length=100)
-    description = models.TextField(verbose_name='Описание')
-    url = models.SlugField(max_length=100, unique=True)
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super().save()
+
 
     def __str__(self) -> str:
         return self.name
@@ -45,6 +59,7 @@ class Genre(models.Model):
 
 
 class Movie(models.Model):
+    slug = models.SlugField(max_length=160, unique=True, primary_key=True, blank=True)
     title = models.CharField(verbose_name='Название', max_length=100)
     tagline = models.CharField(verbose_name='Слоган', max_length=100, default='')
     description = models.TextField(verbose_name='Описание')
@@ -54,13 +69,18 @@ class Movie(models.Model):
     directors = models.ManyToManyField(Actor, verbose_name='Режиссер', related_name='film_director')
     actors = models.ManyToManyField(Actor, verbose_name='Актеры', related_name='film_actor')
     genres = models.ManyToManyField(Genre, verbose_name='Жанры')
-    world_premiere = models.DateField(verbose_name='Премьера', default=date.today())
+    world_premiere = models.DateField(verbose_name='Премьера', default=timezone.now)
     budget = models.PositiveIntegerField(verbose_name='Бюджет', default=0, help_text='указать сумму в долларах')
     fees_in_usa = models.PositiveIntegerField(verbose_name='Сборы в США', default=0, help_text='указать сумму в долларах')
     fees_in_world = models.PositiveIntegerField(verbose_name='Сборы в мире', default=0, help_text='указать сумму в долларах')
     category = models.ForeignKey(Category, verbose_name='Категория', on_delete=models.SET_NULL, null=True)
-    url = models.SlugField(max_length=100, unique=True)
     draft = models.BooleanField(verbose_name='Черновик', default=False)
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.title)
+        super().save()
+
 
     def __str__(self) -> str:
         return self.title
@@ -96,12 +116,12 @@ class RatingStar(models.Model):
 
 
 class Rating(models.Model):
-    ip = models.CharField(verbose_name='IP адрес', max_length=15)
+    user = models.CharField(verbose_name='Пользователь', max_length=50)
     star = models.ForeignKey(RatingStar, on_delete=models.CASCADE, verbose_name='Звезда')
-    movie = models.ForeignKey(Movie, on_delete=models.CASCADE, verbose_name='Фильм')
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE, verbose_name='Фильм', related_name='ratings')
 
     def __str__(self) -> str:
-        return f'{self.star} - {self.movie}'
+        return f'{self.user} - {self.star} - {self.movie}'
     
     class Meta:
         verbose_name = 'Рейтинг'
@@ -112,8 +132,8 @@ class Review(models.Model):
     email = models.EmailField()
     name = models.CharField('Имя', max_length=100)
     text = models.TextField('Сообщение', max_length=5000)
-    parent = models.ForeignKey('self', verbose_name='Родитель', on_delete=models.SET_NULL, blank=True, null=True)
-    movie = models.ForeignKey(Movie, verbose_name='Фильм', on_delete=models.CASCADE)
+    parent = models.ForeignKey('self', verbose_name='Родитель', on_delete=models.SET_NULL, blank=True, null=True, related_name='children')
+    movie = models.ForeignKey(Movie, verbose_name='Фильм', on_delete=models.CASCADE, related_name='reviews')
 
     def __str__(self) -> str:
         return f'{self.name} - {self.movie}'
@@ -121,3 +141,4 @@ class Review(models.Model):
     class Meta:
         verbose_name = 'Отзыв'
         verbose_name_plural = 'Отзывы'
+

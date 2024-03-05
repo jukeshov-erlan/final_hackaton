@@ -11,11 +11,16 @@ class CategoryViewSet(ModelViewSet):
 
 class ActorViewSet(ModelViewSet):
     queryset = Actor.objects.all()
-    serializer_class = ActorSerializer
+    serializer_class = ActorDetailSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_fields = ['name']
     search_fields = ['name']
     ordering_fields = ['name']
+
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return ActorListlSerializer
+        return self.serializer_class
 
 
 class GenreViewSet(ModelViewSet):
@@ -27,15 +32,18 @@ class GenreViewSet(ModelViewSet):
     ordering_fields = ['name']
 
 
-
 class MovieViewSet(ModelViewSet):
     queryset = Movie.objects.all()
-    serializer_class = MovieSerializer
+    serializer_class = MovieDetailSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-    filterset_fields = ['category', 'directors', 'actors', 'genres',]
-    search_fields = ['title', 'tagline', 'category', 'country', 'actors']
-    ordering_fields = ['year', 'category', 'world_premiere', 'budget', 'fees_in_usa', 'fees_in_world']
+    filterset_fields = ['category', 'genres']
+    search_fields = ['title', 'category__name', 'actors__name']
+    ordering_fields = ['year','budget']
 
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return MovieListSerializer
+        return self.serializer_class
 
 
 class MovieShotsViewSet(ModelViewSet):
@@ -55,5 +63,11 @@ class RatingViewSet(ModelViewSet):
 
 class ReviewViewSet(ModelViewSet):
     queryset = Review.objects.all()
-    serializer_class = ReviewSerializer
+    serializer_class = ReviewCreateSerializer
+
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return ReviewListSerializer
+        return self.serializer_class
+
     

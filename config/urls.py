@@ -39,6 +39,7 @@ schema_view = get_schema_view(
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/v1/', include('movies.urls')),
+    path('api-auth/', include('rest_framework.urls')),
     path('docs/', schema_view.with_ui('swagger'))
 ]
 if settings.DEBUG:
