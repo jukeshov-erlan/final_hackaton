@@ -40,8 +40,12 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     #libs
     'rest_framework',
+    'drf_yasg',
+    'corsheaders',
+    'django_filters',
     #apps
     'movies',
+    'orders',
 ]
 
 MIDDLEWARE = [
@@ -131,3 +135,35 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+SWAGGER_SETTINGS = {
+    'SECURITY_DEFINITIONS': {
+        'Bearer': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header'
+        }
+    }
+}
+
+
+CORS_ALLOWED_ORIGINS = ['http://localhost:8000', 'http://localhost:3000', 'https://domain.com']  #SOMETHING ELSE CAN BE ADDED
+
+CORS_ALLOWED_METHODS = ['OPTIONS', 'GET', 'PUT', 'PATCH', 'POST', '*']  #SOMETHING ELSE CAN BE ADDED
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 3,
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
+}
+
+
+STRIPE_PUBLIC_KEY = 'pk_test_51OqpirClsglr4BVp8Rut6Lyx06BSZ3dDgayjNabLqAJUxltfxbrY5rZDowu1hyYIUhqk8BnMl1lfUJwb7tr0gqon00H58yc3rL' #Aman
+STRIPE_SECRET_KEY = 'sk_test_51OqpirClsglr4BVpHzPSbX2w9OEFIelPrmeJx9eV0ndS83s2G8ss1eG1W0cJwsfv2NzlNNHiv3XWGHk0Sgtqqoz500gVTaH8q3'#Aman
+STRIPE_LIVE_MODE = False  # Change to True in production
+
+
+CELERY_BROKER_URL = 'redis://localhost:6379/0'  # адрес Redis
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'

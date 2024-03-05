@@ -61,6 +61,7 @@ class Movie(models.Model):
     category = models.ForeignKey(Category, verbose_name='Категория', on_delete=models.SET_NULL, null=True)
     url = models.SlugField(max_length=100, unique=True)
     draft = models.BooleanField(verbose_name='Черновик', default=False)
+    price = models.PositiveIntegerField() # Aman added
 
     def __str__(self) -> str:
         return self.title
