@@ -87,3 +87,4 @@ class RatingStarSerializer(ModelSerializer):
     class Meta:
         model = RatingStar
         fields = '__all__'
+        
