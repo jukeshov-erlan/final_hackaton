@@ -1,12 +1,10 @@
-
 from pathlib import Path
 import os
 from decouple import config
 from datetime import timedelta
-
+import logging
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 SECRET_KEY = config('SECRET_KEY')
 
@@ -17,19 +15,20 @@ ALLOWED_HOSTS = []
 AUTH_USER_MODEL = 'account.User'
 
 INSTALLED_APPS = [
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    #libs
+    # libs
     'rest_framework',
     'drf_yasg',
     'corsheaders',
     'django_filters',
     'rest_framework_simplejwt',
-    #apps
+    # apps
     'movies',
     'account',
 ]
@@ -65,8 +64,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
-
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -77,8 +74,6 @@ DATABASES = {
         'PORT': 5432
     }
 }
-
-
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -95,8 +90,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
-
 LANGUAGE_CODE = 'ru'
 
 TIME_ZONE = 'Asia/Bishkek'
@@ -105,18 +98,13 @@ USE_I18N = True
 
 USE_TZ = True
 
-
-
 STATIC_URL = 'static/'
-STATIC_ROOT = BASE_DIR/'static'
-
+STATIC_ROOT = BASE_DIR / 'static'
 
 MEDIA_URL = 'media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
 
 SWAGGER_SETTINGS = {
     'SECURITY_DEFINITIONS': {
@@ -128,44 +116,35 @@ SWAGGER_SETTINGS = {
     }
 }
 
+CORS_ALLOWED_ORIGINS = ['http://localhost:8000', 'http://localhost:3000',
+                        'https://domain.com']  # SOMETHING ELSE CAN BE ADDED
 
-CORS_ALLOWED_ORIGINS = ['http://localhost:8000', 'http://localhost:3000', 'https://domain.com']  #SOMETHING ELSE CAN BE ADDED
-
-CORS_ALLOWED_METHODS = ['OPTIONS', 'GET', 'PUT', 'PATCH', 'POST', '*']  #SOMETHING ELSE CAN BE ADDED
-
+CORS_ALLOWED_METHODS = ['OPTIONS', 'GET', 'PUT', 'PATCH', 'POST', '*']  # SOMETHING ELSE CAN BE ADDED
 
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 50,
+    'PAGE_SIZE': 3,
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
     'DEFAULT_AUTHENTICATION_CLASSES': (
-            'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ),
-    # 'DEFAULT_THROTTLE_CLASSES': [
-    #     'rest_framework.throttling.AnonRateThrottle',
-    #     'rest_framework.throttling.UserRateThrottle'
-    # ],
-    # 'DEFAULT_THROTTLE_RATES': {
-    #     'anon': '50/day',
-    #     'user': '100/day'
-    # }
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
 }
-
-CACHES = {
-    "default": {
-        "BACKEND": "django.core.cache.backends.filebased.FileBasedCache",
-        "LOCATION": os.path.join(BASE_DIR, 'cashe_dir'),
-        "TIMEOUT": 15 * 60,
-        "OPTIONS": {"MAX_ENTRIES": 1000},
-    }
-}
-
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=500),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
 }
 
+JAZZMIN_UI_TWEAKS = {
+    # белый фон:
+    # "theme": "flatly",
+    # "theme" : "simplex",  # белый фон с цветами - RGB
+    # "theme": "sketchy",     #  мультяшный
+
+    # темный фон:
+    "theme": "darkly",
+    # "theme": "slate", # темный (серьезный, полностью)
+}
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
@@ -173,7 +152,6 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = config('EMAIL_USER')
 EMAIL_HOST_PASSWORD = config('EMAIL_PASSWORD')
-
 
 CELERY_BROKER_URL = "redis://localhost:6379"
 CELERY_RESULT_BACKEND = "redis://localhost:6379"
@@ -185,30 +163,27 @@ REDIS_HOST = 'localhost'
 REDIS_PORT = '6379'
 
 
-# LOGGING = {
-#     'version': 1,
-#     'disable_existing_loggers': False,
-#     'handlers': {
-#         'console': {
-#             'level': 'INFO',
-#             'class': 'logging.StreamHandler',
-#         },
-#         'file': {
-#             'level': 'DEBUG',
-#             'class': 'logging.FileHandler',
-#             'filename': 'information.log', 
-#         },
-#     },
-#     'loggers': {
-#         'django': {
-#             'handlers': ['console', 'file'],
-#             'level': 'DEBUG',
-#             'propagate': True,
-#         },
-#         'account': { 
-#             'handlers': ['console', 'file'],
-#             'level': 'DEBUG',
-#             'propagate': True,
-#         },
-#     },
-# }
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': 'user_activity.log',
+            'formatter': 'simple',
+        },
+    },
+    'loggers': {
+        '': {
+            'handlers': ['file'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+    },
+    'formatters': {
+        'simple': {
+            'format': '%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+        },
+    },
+}
