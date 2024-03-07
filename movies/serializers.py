@@ -66,7 +66,7 @@ class RatingSerializer(ModelSerializer):
 class MovieListSerializer(ModelSerializer):
     class Meta:
         model = Movie
-        fields = 'title', 'poster', 'category'
+        fields = 'slug', 'title', 'poster', 'category'
 
 
 class MovieDetailSerializer(ModelSerializer):
