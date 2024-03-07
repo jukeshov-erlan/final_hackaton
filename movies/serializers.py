@@ -16,7 +16,7 @@ class ActorDetailSerializer(ModelSerializer):
 class ActorListlSerializer(ModelSerializer):
     class Meta:
         model = Actor
-        fields = 'name', 'image'
+        fields = 'slug', 'name', 'image'
 
 
 class GenreSerializer(ModelSerializer):
