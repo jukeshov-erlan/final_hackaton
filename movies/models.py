@@ -1,6 +1,7 @@
 from django.db import models
 from slugify import slugify
-from datetime import datetime
+# from datetime import datetime
+import datetime
 
 class Category(models.Model):
     slug = models.SlugField(max_length=160, unique=True, primary_key=True, blank=True)
@@ -68,6 +69,7 @@ class Movie(models.Model):
     directors = models.ManyToManyField(Actor, verbose_name='Режиссер', related_name='film_director')
     actors = models.ManyToManyField(Actor, verbose_name='Актеры', related_name='film_actor')
     genres = models.ManyToManyField(Genre, verbose_name='Жанры')
+    world_premiere = models.DateField(verbose_name='Премьера', default='1997-03-01', blank=True, null=True)
     budget = models.PositiveIntegerField(verbose_name='Бюджет', default=0, help_text='указать сумму в долларах')
     fees_in_usa = models.PositiveIntegerField(verbose_name='Сборы в США', default=0, help_text='указать сумму в долларах')
     fees_in_world = models.PositiveIntegerField(verbose_name='Сборы в мире', default=0, help_text='указать сумму в долларах')
