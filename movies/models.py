@@ -25,7 +25,7 @@ class Actor(models.Model):
     name = models.CharField(verbose_name='Имя', max_length=100)
     age = models.PositiveSmallIntegerField(verbose_name='Возраст', default=0)
     description = models.TextField(verbose_name='Описание')
-    image = models.ImageField(verbose_name='Изображение', upload_to='actors/')
+    image = models.ImageField(verbose_name='Изображение', upload_to='actors/', blank=True, null=True)
 
     def save(self, *args, **kwargs):
         if not self.slug:
