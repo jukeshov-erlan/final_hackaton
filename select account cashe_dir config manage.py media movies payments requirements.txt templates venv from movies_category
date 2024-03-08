@@ -1,0 +1,27 @@
+                   List of relations
+ Schema |             Name              | Type  | Owner 
+--------+-------------------------------+-------+-------
+ public | account_user                  | table | erlan
+ public | account_user_groups           | table | erlan
+ public | account_user_user_permissions | table | erlan
+ public | auth_group                    | table | erlan
+ public | auth_group_permissions        | table | erlan
+ public | auth_permission               | table | erlan
+ public | django_admin_log              | table | erlan
+ public | django_content_type           | table | erlan
+ public | django_migrations             | table | erlan
+ public | django_session                | table | erlan
+ public | movies_actor                  | table | erlan
+ public | movies_category               | table | erlan
+ public | movies_genre                  | table | erlan
+ public | movies_movie                  | table | erlan
+ public | movies_movie_actors           | table | erlan
+ public | movies_movie_directors        | table | erlan
+ public | movies_movie_genres           | table | erlan
+ public | movies_movieshots             | table | erlan
+ public | movies_rating                 | table | erlan
+ public | movies_ratingstar             | table | erlan
+ public | movies_review                 | table | erlan
+ public | payments_payment              | table | erlan
+(22 rows)
+
