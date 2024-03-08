@@ -10,7 +10,7 @@ SECRET_KEY = config('SECRET_KEY')
 
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 AUTH_USER_MODEL = 'account.User'
 
@@ -70,7 +70,7 @@ DATABASES = {
         'NAME': config('DB_NAME'),
         'USER': config('DB_USER'),
         'PASSWORD': config('DB_PASSWORD'),
-        'HOST': 'localhost',
+        'HOST': config('DB_HOST'),
         'PORT': 5432
     }
 }
@@ -98,10 +98,10 @@ USE_I18N = True
 
 USE_TZ = True
 
-STATIC_URL = 'static/'
-STATIC_ROOT = BASE_DIR / 'static'
+STATIC_URL = '/static/'
+STATIC_ROOT = '/usr/src/app/static/'
 
-MEDIA_URL = 'media/'
+MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
@@ -116,7 +116,7 @@ SWAGGER_SETTINGS = {
     }
 }
 
-CORS_ALLOWED_ORIGINS = ['http://localhost:8000', 'http://localhost:3000',
+CORS_ALLOWED_ORIGINS = ['http://localhost:80', 'http://localhost:3000',
                         'https://domain.com']  # SOMETHING ELSE CAN BE ADDED
 
 CORS_ALLOWED_METHODS = ['OPTIONS', 'GET', 'PUT', 'PATCH', 'POST', '*']  # SOMETHING ELSE CAN BE ADDED
@@ -146,6 +146,16 @@ JAZZMIN_UI_TWEAKS = {
     # "theme": "slate", # темный (серьезный, полностью)
 }
 
+
+JAZZMIN_SETTINGS = {
+    "site_title": "Hackaton Projects",
+    "welcome_sign": "Добро пожаловать!",
+    "site_header": "Blow",
+    "site_brand": "KINOPOISK_KG",
+    "copyright": "py32",
+}
+
+
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
@@ -153,15 +163,24 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = config('EMAIL_USER')
 EMAIL_HOST_PASSWORD = config('EMAIL_PASSWORD')
 
-CELERY_BROKER_URL = "redis://localhost:6379"
-CELERY_RESULT_BACKEND = "redis://localhost:6379"
-CELERY_TASK_SERIALIZER = 'json'
-CELERY_ACCEPT_CONTENT = ['json']
-CELERY_RESULT_SERIALIZER = 'json'
-CELERY_TIMEZONE = 'UTC'
-REDIS_HOST = 'localhost'
+# BROKER_TRANSPORT = 'redis'
+# BROKER_URL = f'redis://redis:6379/0'
+
+# CELERY_BROKER_URL = "redis://localhost:6379"
+# CELERY_RESULT_BACKEND = "redis://localhost:6379"
+# CELERY_TASK_SERIALIZER = 'json'
+# CELERY_ACCEPT_CONTENT = ['json']
+# CELERY_RESULT_SERIALIZER = 'json'
+# CELERY_TIMEZONE = 'UTC'
+# REDIS_HOST = 'redis'
+# REDIS_PORT = '6379'
+
+REDIS_HOST = config('REDIS_HOST')
+
 REDIS_PORT = '6379'
 
+CELERY_BROKER_URL = 'redis://' + REDIS_HOST + ':' + REDIS_PORT
+CELERY_RESULT_BACKEND = 'redis://' + REDIS_HOST + ':' + REDIS_PORT
 
 LOGGING = {
     'version': 1,
