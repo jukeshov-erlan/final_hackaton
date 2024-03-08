@@ -27,8 +27,10 @@ casts = []
 descriptions = []
 
 for link in film_links:
-    title = link.find('span', class_='styles_mainTitle__IFQyZ styles_activeMovieTittle__kJdJj').text.strip().replace(',', '')
-    description = link.find('span', class_='desktop-list-main-info_truncatedText__IMQRP').text.strip().replace(',', '')
+    title = link.find('span', class_='styles_mainTitle__IFQyZ styles_activeMovieTittle__kJdJj').text.strip().replace(
+        ',', '')
+    description = link.find('span', class_='desktop-list-main-info_truncatedText__IMQRP').text.strip().replace(',',
+                                                                                                               '')
     year = link.find('span', class_='desktop-list-main-info_secondaryText__M_aus').text.strip().replace(',', '')
     cast = link.find_all('span', class_='desktop-list-main-info_truncatedText__IMQRP')[1].text.strip().replace(',', '')
 
@@ -47,7 +49,7 @@ for link in film_links:
 with open('movies.csv', 'w', newline='') as csvfile:
     writer = csv.writer(csvfile)
     writer.writerow(['Title', 'Year', 'Cast', 'Description'])
-    for title, year, cast, description in zip(titles, years, casts, descriptions):
-        writer.writerow([title, year, cast, description])
+    for title, year, cast, description in zip(titles, years, casts):
+        writer.writerow([title, year, cast])
 
 driver.quit()

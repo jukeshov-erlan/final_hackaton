@@ -3,6 +3,7 @@ from rest_framework.filters import SearchFilter, OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 from .serializers import *
+import logging
 
 
 class CategoryViewSet(ModelViewSet):
@@ -66,7 +67,7 @@ class MovieViewSet(ModelViewSet):
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_fields = ['category', 'genres']
     search_fields = ['title', 'category__name', 'actors__name']
-    ordering_fields = ['year','budget']
+    ordering_fields = ['year', 'budget']
 
     def get_permissions(self):
         if self.action in ['list', 'retrieve']:
@@ -81,6 +82,18 @@ class MovieViewSet(ModelViewSet):
         if self.action == 'list':
             return MovieListSerializer
         return self.serializer_class
+
+    def create(self, request, *args, **kwargs):
+        logging.info(f'User {request.user} добавил новый фильм: {request.data.get("title")}')
+        return super().create(request, *args, **kwargs)
+
+    def update(self, request, *args, **kwargs):
+        logging.info(f'User {request.user} обновил информацию о фильме с id={kwargs["pk"]}')
+        return super().update(request, *args, **kwargs)
+
+    def destroy(self, request, *args, **kwargs):
+        logging.info(f'User {request.user} удалил фильм с id={kwargs["pk"]}')
+        return super().destroy(request, *args, **kwargs)
 
 
 class MovieShotsViewSet(ModelViewSet):
@@ -117,6 +130,18 @@ class RatingViewSet(ModelViewSet):
             permissions = [AllowAny]
         return [permission() for permission in permissions]
 
+    def create(self, request, *args, **kwargs):
+        logging.info(
+            f'User {request.user} добавил рейтинг {request.data.get("stars")} для фильма с id={request.data.get("movie_id")}')
+        return super().create(request, *args, **kwargs)
+
+    def update(self, request, *args, **kwargs):
+        logging.info(f'User {request.user} обновил рейтинг с id={kwargs["pk"]}')
+        return super().update(request, *args, **kwargs)
+
+    def destroy(self, request, *args, **kwargs):
+        logging.info(f'User {request.user} удалил рейтинг с id={kwargs["pk"]}')
+        return super().destroy(request, *args, **kwargs)
 
 class ReviewViewSet(ModelViewSet):
     queryset = Review.objects.all()
@@ -138,4 +163,14 @@ class ReviewViewSet(ModelViewSet):
             return ReviewListSerializer
         return self.serializer_class
 
-    
+    def create(self, request, *args, **kwargs):
+        logging.info(f'User {request.user} добавил новый отзыв для фильма с id={request.data.get("movie_id")}')
+        return super().create(request, *args, **kwargs)
+
+    def update(self, request, *args, **kwargs):
+        logging.info(f'User {request.user} обновил отзыв с id={kwargs["pk"]}')
+        return super().update(request, *args, **kwargs)
+
+    def destroy(self, request, *args, **kwargs):
+        logging.info(f'User {request.user} удалил отзыв с id={kwargs["pk"]}')
+        return super().destroy(request, *args, **kwargs)
