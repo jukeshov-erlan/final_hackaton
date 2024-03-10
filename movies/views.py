@@ -36,10 +36,10 @@ class ActorViewSet(ModelViewSet):
             permissions = [AllowAny]
         return [permission() for permission in permissions]
 
-    def get_serializer_class(self):
-        if self.action == 'list':
-            return ActorListlSerializer
-        return self.serializer_class
+    # def get_serializer_class(self):
+    #     if self.action == 'list':
+    #         return ActorListlSerializer
+    #     return self.serializer_class
 
 
 class GenreViewSet(ModelViewSet):
@@ -77,10 +77,10 @@ class MovieViewSet(ModelViewSet):
             permissions = [AllowAny]
         return [permission() for permission in permissions]
 
-    def get_serializer_class(self):
-        if self.action == 'list':
-            return MovieListSerializer
-        return self.serializer_class
+    # def get_serializer_class(self):
+    #     if self.action == 'list':
+    #         return MovieListSerializer
+    #     return self.serializer_class
 
 
 class MovieShotsViewSet(ModelViewSet):
@@ -133,9 +133,9 @@ class ReviewViewSet(ModelViewSet):
             permissions = [AllowAny]
         return [permission() for permission in permissions]
 
-    def get_serializer_class(self):
-        if self.action == 'list':
-            return ReviewListSerializer
-        return self.serializer_class
+    # def get_serializer_class(self):
+    #     if self.action == 'list':
+    #         return ReviewListSerializer
+    #     return self.serializer_class
 
     
