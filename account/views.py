@@ -17,15 +17,16 @@ class RegisterView(APIView):
         return Response('Аккаунт успешно создан', status=201)
 
 
-class ActivateView(APIView):
-    def get(self, request, email, activation_code):
-        user = get_user_model().objects.filter(email=email, activation_code=activation_code).first()
-        if not user:
-            return Response('Пользователь не найден', 400)
-        user.activation_code = ''
-        user.is_active = True
-        user.save()
-        return Response('Activated', 200)
+class ActivationView(APIView):
+    @swagger_auto_schema(request_body=ActivationSerializer())
+    def post(self, request):
+        serializer = ActivationSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.activate()
+        return Response(
+            'Аккаунт успешно активирован',
+            status=200
+        )
 
 
 class LogoutAPIView(GenericAPIView):
