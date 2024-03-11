@@ -29,7 +29,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'django_filters',
     'rest_framework_simplejwt',
-    #apps
+    'drf_recaptcha',    #apps
     'movies',
     'account',
     'payments',
@@ -113,7 +113,7 @@ STATIC_ROOT = BASE_DIR/'static'
 
 
 MEDIA_URL = 'media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = BASE_DIR / 'media/'
 
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
@@ -142,14 +142,16 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
             'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
-    # 'DEFAULT_THROTTLE_CLASSES': [
-    #     'rest_framework.throttling.AnonRateThrottle',
-    #     'rest_framework.throttling.UserRateThrottle'
-    # ],
-    # 'DEFAULT_THROTTLE_RATES': {
-    #     'anon': '50/day',
-    #     'user': '100/day'
-    # }
+    'DEFAULT_THROTTLE_CLASSES': (
+        'rest_framework.throttling.AnonRateThrottle',
+        'rest_framework.throttling.UserRateThrottle'
+    ),
+    'DEFAULT_THROTTLE_RATES': {
+        'anon': '500/minute',
+        'user': '1000/minute',
+        'loginAttempts': '3/hr',
+
+    }
 }
 
 CACHES = {
@@ -188,3 +190,7 @@ REDIS_PORT = '6379'
 
 STRIPE_SECRET_KEY = config('STRIPE_SECRET_KEY')
 STRIPE_PUBLISHABLE_KEY = config('STRIPE_PUBLISHABLE_KEY')
+
+
+RE_CAPTCHA_SITE_KEY= '6LfJKZQpAAAAAI1G2XpbToytdZZ1MkpwkoAChjpe'
+DRF_RECAPTCHA_SECRET_KEY = '6LfJKZQpAAAAAGFwPwRmuK_Zdzb6_5J4iuBouQfa'

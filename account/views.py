@@ -5,9 +5,22 @@ from django.contrib.auth import get_user_model
 from .serializers import *
 from rest_framework.permissions import IsAuthenticated
 from drf_yasg.utils import swagger_auto_schema
+from rest_framework.exceptions import Throttled
+from account.throttle import UserLoginRateThrottle
+from django.conf import settings
+from django.shortcuts import render
+
+
+def demo_recaptcha(request):
+    return render(request, 'demo_recaptcha.html', {
+        "key": settings.RE_CAPTCHA_SITE_KEY
+    })
+
 
 
 class RegisterView(APIView):
+    throttle_classes = (UserLoginRateThrottle,)
+
     @swagger_auto_schema(request_body=RegisterSerializer())
     def post(self, request):
         data = request.data
@@ -15,6 +28,15 @@ class RegisterView(APIView):
         if serializer.is_valid(raise_exception=True):
             serializer.save()
         return Response('Аккаунт успешно создан', status=201)
+
+    def perform_create(self, serializer):
+        user = serializer.save()
+
+    def throttled(self, request, wait):
+        raise Throttled(detail={
+            "message": "recaptcha_required",
+        })
+
 
 
 class ActivationView(APIView):

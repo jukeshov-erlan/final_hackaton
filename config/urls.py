@@ -4,6 +4,8 @@ from django.conf import settings
 from django.conf.urls.static import static
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
+from account.views import demo_recaptcha
+
 
 
 schema_view = get_schema_view(
@@ -25,6 +27,7 @@ urlpatterns = [
     path('payment/', include('payments.urls')),
     path('api/v1/', include('movies.urls')),
     path('api/v1/account/', include('account.urls')),
+    path('demo-recaptcha/', demo_recaptcha, name="demo"),
     path('docs/', schema_view.with_ui('swagger'))
 ]
 if settings.DEBUG:
