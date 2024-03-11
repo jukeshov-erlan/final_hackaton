@@ -9,6 +9,7 @@ import logging
 class CategoryViewSet(ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
+    lookup_field = 'name'
 
     def get_permissions(self):
         if self.action in ['list', 'retrieve']:
@@ -23,6 +24,7 @@ class CategoryViewSet(ModelViewSet):
 class ActorViewSet(ModelViewSet):
     queryset = Actor.objects.all()
     serializer_class = ActorDetailSerializer
+    permission_classes = [IsAuthenticated]
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_fields = ['name']
     search_fields = ['name']
