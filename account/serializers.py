@@ -35,6 +35,31 @@ class RegisterSerializer(serializers.ModelSerializer):
         return user
     
 
+class ActivationSerializer(serializers.Serializer):
+    email = serializers.CharField()
+    code = serializers.CharField()
+
+    def validate(self, attrs):
+        email = attrs.get('email')
+        code = attrs.get('code')
+
+        if not User.objects.filter(email=email, activation_code=code).exists(): 
+            #exists -> проверяет на наличие объектов (если существует True, иначе False)
+            raise serializers.ValidationError(
+                'Пользователь не найден'
+            )
+        return attrs
+    
+    def activate(self):
+        email = self.validated_data.get('email')
+        user = User.objects.get(email=email)
+        user.is_active = True
+        user.activation_code = ''
+        user.save()
+
+
+    
+
 class LogoutSerializer(serializers.Serializer):
     refresh = serializers.CharField()
 
