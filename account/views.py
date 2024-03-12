@@ -61,7 +61,7 @@ class LogoutAPIView(GenericAPIView):
         return Response('Вы успешно вышли из аккаунта', status=204)
 
 
-class ChangePasswordVIew(APIView):
+class ChangePasswordView(APIView):
     permission_classes = [IsAuthenticated]
 
     @swagger_auto_schema(request_body=ChangePasswordSerializer())

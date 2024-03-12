@@ -9,11 +9,12 @@ SECRET_KEY = config('SECRET_KEY')
 
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 AUTH_USER_MODEL = 'account.User'
 
 INSTALLED_APPS = [
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -70,8 +71,8 @@ DATABASES = {
         'NAME': config('DB_NAME'),
         'USER': config('DB_USER'),
         'PASSWORD': config('DB_PASSWORD'),
-        'HOST': 'localhost',
-        'PORT': 5432
+        'HOST': config('DB_HOST'),
+        'PORT': config('DB_PORT')
     }
 }
 
@@ -117,7 +118,7 @@ SWAGGER_SETTINGS = {
 }
 
 CORS_ALLOWED_ORIGINS = ['http://localhost:8000', 'http://localhost:3000',
-                        'https://domain.com']  # SOMETHING ELSE CAN BE ADDED
+                        'https://domain.com', 'http://0.0.0.0:80']  # SOMETHING ELSE CAN BE ADDED
 
 CORS_ALLOWED_METHODS = ['OPTIONS', 'GET', 'PUT', 'PATCH', 'POST', '*']  # SOMETHING ELSE CAN BE ADDED
 
@@ -150,7 +151,6 @@ JAZZMIN_UI_TWEAKS = {
     "theme": "darkly",
     # "theme": "slate", # темный (серьезный, полностью)
 }
-
 
 JAZZMIN_SETTINGS = {
     "site_title": "Hackaton Projects",
@@ -197,13 +197,11 @@ REDIS_PORT = '6379'
 CELERY_BROKER_URL = 'redis://' + REDIS_HOST + ':' + REDIS_PORT
 CELERY_RESULT_BACKEND = 'redis://' + REDIS_HOST + ':' + REDIS_PORT
 
-
 STRIPE_SECRET_KEY = config('STRIPE_SECRET_KEY')
 STRIPE_PUBLISHABLE_KEY = config('STRIPE_PUBLISHABLE_KEY')
 
 RE_CAPTCHA_SITE_KEY = config('RE_CAPTCHA_SITE_KEY')
 DRF_RECAPTCHA_SECRET_KEY = config('DRF_RECAPTCHA_SECRET_KEY')
-
 
 LOGGING = {
     'version': 1,

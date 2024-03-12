@@ -10,6 +10,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 RUN mkdir static && mkdir media
 COPY . .
 
-RUN python3 manage.py collectstatic --noinput
+RUN python3 manage.py collectstatic
 
 EXPOSE 8000

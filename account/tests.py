@@ -1,6 +1,6 @@
 from rest_framework.test import APITestCase, APIRequestFactory, force_authenticate
 from django.contrib.auth import get_user_model
-from .views import RegisterView, ActivateView, LogoutAPIView, ChangePasswordView, ForgotPasswordCompleteView, \
+from .views import RegisterView, ActivationView, LogoutAPIView, ChangePasswordView, ForgotPasswordCompleteView, \
     ForgotPasswordView
 
 User = get_user_model()
