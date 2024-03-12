@@ -4,52 +4,59 @@ from selenium.webdriver.chrome.options import Options
 from bs4 import BeautifulSoup
 import time
 
-options = Options()
-options.add_argument("--no-sandbox")
-options.add_argument("--disable-dev-shm-usage")
 
-driver = webdriver.Chrome(options=options)
+def parse_movies():
+    options = Options()
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
 
-url = 'https://www.kinopoisk.ru/lists/movies/top250/'
-driver.get(url)
+    driver = webdriver.Chrome(options=options)
 
-time.sleep(5)
+    url = 'https://www.kinopoisk.ru/lists/movies/top250/'
+    driver.get(url)
 
-html = driver.page_source
+    time.sleep(5)
 
-soup = BeautifulSoup(html, 'html.parser')
+    html = driver.page_source
 
-film_links = soup.find_all('div', class_='styles_root__ti07r')
+    soup = BeautifulSoup(html, 'html.parser')
 
-titles = []
-years = []
-casts = []
-descriptions = []
+    film_links = soup.find_all('div', class_='styles_root__ti07r')
 
-for link in film_links:
-    title = link.find('span', class_='styles_mainTitle__IFQyZ styles_activeMovieTittle__kJdJj').text.strip().replace(
-        ',', '')
-    description = link.find('span', class_='desktop-list-main-info_truncatedText__IMQRP').text.strip().replace(',',
-                                                                                                               '')
-    year = link.find('span', class_='desktop-list-main-info_secondaryText__M_aus').text.strip().replace(',', '')
-    cast = link.find_all('span', class_='desktop-list-main-info_truncatedText__IMQRP')[1].text.strip().replace(',', '')
+    titles = []
+    years = []
+    casts = []
+    descriptions = []
 
-    title = title.replace('"', '').replace('•', '')
-    description = description.replace('"', '').replace('•', '')
-    cast = cast.replace('"', '').replace('•', '')
+    for link in film_links:
+        title = link.find('span',
+                          class_='styles_mainTitle__IFQyZ styles_activeMovieTittle__kJdJj').text.strip().replace(
+            ',', '')
+        description = link.find('span', class_='desktop-list-main-info_truncatedText__IMQRP').text.strip().replace(',',
+                                                                                                                   '')
+        year = link.find('span', class_='desktop-list-main-info_secondaryText__M_aus').text.strip().replace(',', '')
+        cast = link.find_all('span', class_='desktop-list-main-info_truncatedText__IMQRP')[1].text.strip().replace(',',
+                                                                                                                   '')
 
-    titles.append(title)
-    descriptions.append(description)
-    years.append(year)
-    casts.append(cast)
+        title = title.replace('"', '').replace('•', '')
+        description = description.replace('"', '').replace('•', '')
+        cast = cast.replace('"', '').replace('•', '')
 
-    if len(titles) == 50:
-        break
+        titles.append(title)
+        descriptions.append(description)
+        years.append(year)
+        casts.append(cast)
 
-with open('movies.csv', 'w', newline='') as csvfile:
-    writer = csv.writer(csvfile)
-    writer.writerow(['Title', 'Year', 'Cast', 'Description'])
-    for title, year, cast, description in zip(titles, years, casts):
-        writer.writerow([title, year, cast])
+        if len(titles) == 50:
+            break
 
-driver.quit()
+    with open('movies.csv', 'w', newline='') as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow(['Title', 'Year', 'Cast', 'Description'])
+        for title, year, cast, description in zip(titles, years, casts, descriptions):
+            writer.writerow([title, year, cast, description])
+
+    driver.quit()
+
+
+parse_movies()

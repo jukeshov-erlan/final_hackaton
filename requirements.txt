@@ -13,4 +13,5 @@ gunicorn
 redis
 python-slugify
 python-decouple
+requests
 selenium
