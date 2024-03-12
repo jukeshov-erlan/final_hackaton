@@ -44,7 +44,6 @@ class ActivationSerializer(serializers.Serializer):
         code = attrs.get('code')
 
         if not User.objects.filter(email=email, activation_code=code).exists(): 
-            #exists -> проверяет на наличие объектов (если существует True, иначе False)
             raise serializers.ValidationError(
                 'Пользователь не найден'
             )

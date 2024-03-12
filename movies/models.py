@@ -1,7 +1,6 @@
 from django.db import models
 from slugify import slugify
-# from datetime import datetime
-import datetime
+from datetime import datetime
 
 class Category(models.Model):
     slug = models.SlugField(max_length=160, unique=True, primary_key=True, blank=True)
@@ -23,7 +22,7 @@ class Category(models.Model):
 class Actor(models.Model):
     slug = models.SlugField(max_length=160, unique=True, primary_key=True, blank=True)
     name = models.CharField(verbose_name='Имя', max_length=100)
-    age = models.PositiveSmallIntegerField(verbose_name='Возраст', default=0)
+    age = models.PositiveSmallIntegerField(verbose_name='Возраст')
     description = models.TextField(verbose_name='Описание')
     image = models.ImageField(verbose_name='Изображение', upload_to='actors/', blank=True, null=True)
 
@@ -63,13 +62,13 @@ class Movie(models.Model):
     title = models.CharField(verbose_name='Название', max_length=100)
     tagline = models.CharField(verbose_name='Слоган', max_length=100, default='')
     description = models.TextField(verbose_name='Описание')
-    poster = models.ImageField('Постер', upload_to='movies/', blank=True, null=True)
-    year = models.PositiveSmallIntegerField(verbose_name='Дата выхода', default=1997)
+    poster = models.ImageField('Постер', upload_to='movies/')
+    year = models.PositiveSmallIntegerField(verbose_name='Дата выхода')
     country = models.CharField(verbose_name='Страна', max_length=50)
     directors = models.ManyToManyField(Actor, verbose_name='Режиссер', related_name='film_director')
     actors = models.ManyToManyField(Actor, verbose_name='Актеры', related_name='film_actor')
     genres = models.ManyToManyField(Genre, verbose_name='Жанры')
-    world_premiere = models.DateField(verbose_name='Премьера', default='1997-03-01', blank=True, null=True)
+    world_premiere = models.DateField(verbose_name='Премьера')
     budget = models.PositiveIntegerField(verbose_name='Бюджет', help_text='указать сумму в долларах')
     fees_in_usa = models.PositiveIntegerField(verbose_name='Сборы в США', help_text='указать сумму в долларах')
     fees_in_world = models.PositiveIntegerField(verbose_name='Сборы в мире', help_text='указать сумму в долларах')
@@ -129,8 +128,7 @@ class Rating(models.Model):
 
 
 class Review(models.Model):
-    email = models.EmailField()
-    name = models.CharField('Имя', max_length=100)
+    user = models.CharField('Пользователь', max_length=100)
     text = models.TextField('Сообщение', max_length=5000)
     parent = models.ForeignKey('self', verbose_name='Родитель', on_delete=models.SET_NULL, blank=True, null=True, related_name='children')
     movie = models.ForeignKey(Movie, verbose_name='Фильм', on_delete=models.CASCADE, related_name='reviews')

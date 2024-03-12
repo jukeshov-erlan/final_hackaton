@@ -16,7 +16,7 @@ class ActorDetailSerializer(ModelSerializer):
 class ActorListlSerializer(ModelSerializer):
     class Meta:
         model = Actor
-        fields = 'slug', 'name', 'image'
+        fields = 'name', 'image'
 
 
 class GenreSerializer(ModelSerializer):
@@ -54,7 +54,7 @@ class ReviewListSerializer(ModelSerializer):
     class Meta:
         list_serializer_class = FilterReviewListSerializer
         model = Review
-        fields = 'name', 'text', 'children'
+        fields = 'user', 'text', 'children'
 
 
 class RatingSerializer(ModelSerializer):
@@ -66,7 +66,7 @@ class RatingSerializer(ModelSerializer):
 class MovieListSerializer(ModelSerializer):
     class Meta:
         model = Movie
-        fields = 'slug', 'title', 'poster', 'category'
+        fields = 'title', 'poster', 'category'
 
 
 class MovieDetailSerializer(ModelSerializer):
