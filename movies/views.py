@@ -1,18 +1,13 @@
-from rest_framework.response import Response
-from rest_framework import status
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.filters import SearchFilter, OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 from .serializers import *
-import logging
-from main import parse_movies
 
 
 class CategoryViewSet(ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
-    lookup_field = 'name'
 
     def get_permissions(self):
         if self.action in ['list', 'retrieve']:
@@ -27,7 +22,6 @@ class CategoryViewSet(ModelViewSet):
 class ActorViewSet(ModelViewSet):
     queryset = Actor.objects.all()
     serializer_class = ActorDetailSerializer
-    permission_classes = [IsAuthenticated]
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_fields = ['name']
     search_fields = ['name']
@@ -74,11 +68,6 @@ class MovieViewSet(ModelViewSet):
     search_fields = ['title', 'category__name', 'actors__name']
     ordering_fields = ['year', 'budget']
 
-    def send_movie_data(self, request, *args, **kwargs):
-        parse_movies()
-
-        return Response({'message': 'Данные о фильмах успешно отправлены'}, status=status.HTTP_201_CREATED)
-
     def get_permissions(self):
         if self.action in ['list', 'retrieve']:
             permissions = [AllowAny]
@@ -92,18 +81,6 @@ class MovieViewSet(ModelViewSet):
         if self.action == 'list':
             return MovieListSerializer
         return self.serializer_class
-
-    def create(self, request, *args, **kwargs):
-        logging.info(f'User {request.user} добавил новый фильм: {request.data.get("title")}')
-        return super().create(request, *args, **kwargs)
-
-    def update(self, request, *args, **kwargs):
-        logging.info(f'User {request.user} обновил информацию о фильме с id={kwargs["pk"]}')
-        return super().update(request, *args, **kwargs)
-
-    def destroy(self, request, *args, **kwargs):
-        logging.info(f'User {request.user} удалил фильм с id={kwargs["pk"]}')
-        return super().destroy(request, *args, **kwargs)
 
 
 class MovieShotsViewSet(ModelViewSet):
@@ -140,19 +117,6 @@ class RatingViewSet(ModelViewSet):
             permissions = [AllowAny]
         return [permission() for permission in permissions]
 
-    def create(self, request, *args, **kwargs):
-        logging.info(
-            f'User {request.user} добавил рейтинг {request.data.get("stars")} для фильма с id={request.data.get("movie_id")}')
-        return super().create(request, *args, **kwargs)
-
-    def update(self, request, *args, **kwargs):
-        logging.info(f'User {request.user} обновил рейтинг с id={kwargs["pk"]}')
-        return super().update(request, *args, **kwargs)
-
-    def destroy(self, request, *args, **kwargs):
-        logging.info(f'User {request.user} удалил рейтинг с id={kwargs["pk"]}')
-        return super().destroy(request, *args, **kwargs)
-
 
 class ReviewViewSet(ModelViewSet):
     queryset = Review.objects.all()
@@ -169,19 +133,8 @@ class ReviewViewSet(ModelViewSet):
             permissions = [AllowAny]
         return [permission() for permission in permissions]
 
-    # def get_serializer_class(self):
-    #     if self.action == 'list':
-    #         return ReviewListSerializer
-    #     return self.serializer_class
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return ReviewListSerializer
+        return self.serializer_class
 
-    def create(self, request, *args, **kwargs):
-        logging.info(f'User {request.user} добавил новый отзыв для фильма с id={request.data.get("movie_id")}')
-        return super().create(request, *args, **kwargs)
-
-    def update(self, request, *args, **kwargs):
-        logging.info(f'User {request.user} обновил отзыв с id={kwargs["pk"]}')
-        return super().update(request, *args, **kwargs)
-
-    def destroy(self, request, *args, **kwargs):
-        logging.info(f'User {request.user} удалил отзыв с id={kwargs["pk"]}')
-        return super().destroy(request, *args, **kwargs)

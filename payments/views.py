@@ -5,11 +5,12 @@ from django.urls import reverse
 
 import stripe
 
+
 def home(request):
     stripe.api_key = settings.STRIPE_SECRET_KEY
     if request.method == "POST":
         price = stripe.Price.create(
-            unit_amount=2000,  
+            unit_amount=2000,
             currency='KGS',
             recurring={
                 'interval': 'month'
@@ -19,7 +20,6 @@ def home(request):
         return HttpResponseRedirect('https://buy.stripe.com/test_14k2b02OK89RaHu7su')
 
     return render(request, "home.html")
-
 
 
 def success(request):

@@ -1,7 +1,6 @@
 from rest_framework.views import APIView
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
-from django.contrib.auth import get_user_model
 from .serializers import *
 from rest_framework.permissions import IsAuthenticated
 from drf_yasg.utils import swagger_auto_schema
